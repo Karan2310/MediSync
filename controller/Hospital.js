@@ -51,6 +51,26 @@ const Register = async (req, res, next) => {
   }
 };
 
+const DeleteHospital = async (req, res, next) => {
+  try {
+    const { hospital_id } = req.params;
+    await HospitalSchema.findByIdAndDelete(hospital_id);
+    res.status(200).send("Hospital successfully deleted");
+  } catch (err) {
+    next(err);
+  }
+};
+
+const HospitalInfo = async (req, res, next) => {
+  try {
+    const { hospital_id } = req.params;
+    const hospital = await HospitalSchema.findById(hospital_id).lean();
+    res.status(200).json(hospital);
+  } catch (err) {
+    next(err);
+  }
+};
+
 const AllHospitals = async (req, res, next) => {
   try {
     const hospitals = await HospitalSchema.find().lean();
@@ -60,4 +80,4 @@ const AllHospitals = async (req, res, next) => {
   }
 };
 
-export { Register, AllHospitals };
+export { Register, DeleteHospital, HospitalInfo, AllHospitals };
