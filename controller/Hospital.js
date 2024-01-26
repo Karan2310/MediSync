@@ -73,7 +73,11 @@ const HospitalInfo = async (req, res, next) => {
 
 const AllHospitals = async (req, res, next) => {
   try {
-    const hospitals = await HospitalSchema.find().lean();
+    const hospitals = await HospitalSchema.find()
+      .sort({
+        createdAt: -1,
+      })
+      .lean();
     res.status(200).json(hospitals);
   } catch (err) {
     next(err);

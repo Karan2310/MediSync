@@ -6,10 +6,19 @@ import {
   HospitalInfo,
   AllHospitals,
 } from "../controller/Hospital.js";
+import { HospitalLogin } from "../controller/Login.js";
 import { RegistrationMail } from "../middleware/Email.js";
 import fieldHandler from "../middleware/fieldHandler.js";
 
 const router = express.Router();
+
+router.post(
+  "/hospital/login",
+  body("username").trim().notEmpty().withMessage("Username is required"),
+  body("password").trim().notEmpty().withMessage("Password is required"),
+  fieldHandler,
+  HospitalLogin
+);
 
 router.post(
   "/hospital/register",
