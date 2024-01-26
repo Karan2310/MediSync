@@ -10,6 +10,7 @@ import errorHandler from "./middleware/errorHandler.js";
 // const ClientSideRoute = require("./routes/clientSide");
 // const CookieRoute = require("./routes/cookie");
 import HospitalRoute from "./routes/HospitalRoute.js";
+import IndexRoute from "./routes/index.js";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -23,6 +24,7 @@ app.use("/api", HospitalRoute);
 // app.use("/api/field", IndexRoute);
 // app.use("/api/auth/client", ClientSideRoute);
 // app.use("/api/cookie", CookieRoute);
+app.use("/api", IndexRoute);
 
 app.use(errorHandler);
 
