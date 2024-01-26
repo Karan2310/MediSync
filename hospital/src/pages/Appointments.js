@@ -180,7 +180,7 @@ const Appointments = () => {
 
   return (
     <div>
-      <div className="container-fluid">
+      <div className="container-fluid appointments">
         <div className="c-card">
           <h4>Walk In Appointments</h4>
           <div className="container-fluid p-0 mt-3">
