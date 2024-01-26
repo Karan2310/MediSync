@@ -1,5 +1,5 @@
-const ErrorResponse = require("../utils/errorResponse");
-const { validationResult } = require("express-validator");
+import ErrorResponse from "../utils/errorResponse.js";
+import { validationResult } from "express-validator";
 
 const fieldHandler = async (req, res, next) => {
   try {
@@ -14,4 +14,4 @@ const fieldHandler = async (req, res, next) => {
   }
 };
 
-module.exports = fieldHandler;
+export default fieldHandler;
