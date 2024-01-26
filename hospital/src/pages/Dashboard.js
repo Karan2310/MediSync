@@ -216,15 +216,18 @@ const Dashboard = () => {
                 <div className="col-6 text-capitalize">
                   <p className="fw-600 ">Appointments Booked</p>
                   <h1 className="mt-2">
-                    {hospitalData &&
+                    {(hospitalData &&
                       hospitalData.today_non_treated_patient_count +
-                        hospitalData.today_treated_patient_count}
+                        hospitalData.today_treated_patient_count) ||
+                      0}
                   </h1>
                 </div>
                 <div className="col-6 text-capitalize">
                   <p className="fw-600 ">Appointments Completed</p>
                   <h1 className="mt-2">
-                    {hospitalData && hospitalData.today_treated_patient_count}
+                    {(hospitalData &&
+                      hospitalData.today_treated_patient_count) ||
+                      0}
                   </h1>
                 </div>
               </div>
@@ -250,7 +253,7 @@ const Dashboard = () => {
             <div className="c-card">
               <h4>Doctors Available today</h4>
               <h1 className="text-center mt-2" style={{ fontSize: "1200%" }}>
-                {hospitalData && hospitalData.doctor_available_count}
+                {(hospitalData && hospitalData.doctor_available_count) || 0}
               </h1>
             </div>
           </div>
