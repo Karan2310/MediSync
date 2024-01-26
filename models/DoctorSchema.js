@@ -28,11 +28,9 @@ const DoctorSchema = new Schema(
       unique: true,
       required: [true, "Please provide the mac address"],
     },
-    photo_url: {
-      type: String,
-      trim: true,
-      default: "https://www.pexels.com/photo/man-in-brown-polo-shirt-614810/",
-      required: [true, "Please provide the photo"],
+    photo_id: {
+      type: Schema.Types.ObjectId,
+      required: [true, "Please provide a photo id"],
     },
     specialization: {
       type: String,
