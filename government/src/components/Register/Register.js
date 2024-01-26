@@ -35,7 +35,6 @@ function Register({ setLoading }) {
     contact_details,
   }) => {
     setLoading(true);
-
     try {
       const { data } = await axios.post("/api/hospital/register", {
         hospital_name,
@@ -50,9 +49,9 @@ function Register({ setLoading }) {
       alert("Hospital registered successfully!");
       form.reset();
     } catch (err) {
-      console.error(err);
+      console.log(err);
+      alert(err.response.data.error || err.message);
     }
-
     setLoading(false);
   };
 

@@ -28,7 +28,14 @@ router.post(
   body("address.street").trim().notEmpty().withMessage("Street is required"),
   body("address.city").trim().notEmpty().withMessage("City is required"),
   body("address.state").trim().notEmpty().withMessage("Sate is required"),
-  body("address.zipCode").trim().notEmpty().withMessage("Zip Code is required"),
+  body("address.zipCode")
+    .trim()
+    .notEmpty()
+    .withMessage("Zip Code is required")
+    .isLength(6)
+    .withMessage("Zip Code length should be 6")
+    .isNumeric()
+    .withMessage("Zip Code should be numeric"),
   body("address.country").trim().notEmpty().withMessage("Country is required"),
   body("contact_details.phone_number")
     .trim()

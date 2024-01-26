@@ -15,54 +15,34 @@ import "./HospitalList.css";
 function HospitalList({ setLoading }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [hospitals, setHospitals] = useState([]);
-  const [filteredHospitals, setFilteredHospitals] = useState([
-    {
-      _id: "60f9d1c9e6b3a5b4b4a7e7b1",
-      name: "Hospital 1",
-      address: {
-        street: "Street 1",
-        city: "City 1",
-        state: "State 1",
-        country: "Country 1",
-        zipCode: "Zip Code 1",
-      },
-      contact_details: {
-        email_address: "Email 1",
-        phone_number: "Phone 1",
-      },
-      createdAt: "2021-07-23T12:00:57.000Z",
-      updatedAt: "2021-07-23T12:00:57.000Z",
-      __v: 0,
-    },
-  ]);
+  const [filteredHospitals, setFilteredHospitals] = useState([]);
   const [reFetch, setReFetch] = useState(false);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     setLoading(true);
-  //     try {
-  //       const { data } = await axios.get("/api/hospitals");
-  //       setHospitals(data);
-  //       setFilteredHospitals(data);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //     setLoading(false);
-  //   })();
-  // }, [reFetch]);
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      try {
+        const { data } = await axios.get("/api/hospitals");
+        setHospitals(data);
+        setFilteredHospitals(data);
+      } catch (err) {
+        console.log(err);
+        alert(err.response.data.error || err.message);
+      }
+      setLoading(false);
+    })();
+  }, [reFetch]);
 
-  // useEffect(() => {
-  //   (() => {
-  //     const filteredData = hospitals.filter((item) =>
-  //       Object.values(item).some(
-  //         (value) =>
-  //           typeof value === "string" &&
-  //           value.toLowerCase().includes(searchQuery.toLowerCase())
-  //       )
-  //     );
-  //     setFilteredHospitals(filteredData);
-  //   })();
-  // }, [searchQuery, hospitals]);
+  useEffect(() => {
+    const filteredData = hospitals.filter((item) =>
+      Object.values(item).some(
+        (value) =>
+          typeof value === "string" &&
+          value.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
+    setFilteredHospitals(filteredData);
+  }, [searchQuery, hospitals]);
 
   const deleteHospital = async (hospital_id) => {
     setLoading(true);
@@ -70,7 +50,8 @@ function HospitalList({ setLoading }) {
       await axios.delete(`/api/hospital/delete/${hospital_id}`);
       setReFetch(!reFetch);
     } catch (err) {
-      console.error(err);
+      console.log(err);
+      alert(err.response.data.error || err.message);
     }
     setLoading(false);
   };
@@ -78,7 +59,7 @@ function HospitalList({ setLoading }) {
   return (
     <div>
       <TextInput
-        placeholder="Search Hospital Name, City, Email...."
+        placeholder="Search Hospital Name"
         value={searchQuery}
         onChange={(event) => setSearchQuery(event.target.value)}
         style={{ marginBottom: "20px" }}
