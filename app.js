@@ -5,6 +5,7 @@ dotenv.config();
 import db from "./config/db.js";
 db();
 import cookieParser from "cookie-parser";
+import fileUpload from "express-fileupload";
 import errorHandler from "./middleware/errorHandler.js";
 // const IndexRoute = require("./routes/index");
 // const ClientSideRoute = require("./routes/clientSide");
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(fileUpload());
 
 app.use("/api", HospitalRoute);
 // app.use("/api/field", IndexRoute);
