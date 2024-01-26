@@ -58,6 +58,7 @@ h6 {
 .rounded {
   border-radius: 8px !important;
 }
+
 .c-card {
   background-color: #ffffff;
   padding: 1rem;
@@ -92,4 +93,22 @@ h6 {
   .col-lg-9 {
     width: 80%;
   }
+}
+
+#google_element select {
+  position: absolute;
+  width: 180px;
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.8 rem;
+  outline: none;
+  cursor: pointer;
+  top: 0.2rem;
+  right: 1rem;
+
+}
+
+.google-translate-powered-by {
+  display: none;
 }
