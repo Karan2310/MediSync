@@ -9,7 +9,7 @@ const VerifyPatient = async (req, res, next) => {
     })
       .select(["_id"])
       .lean();
-    if (!response) throw new ErrorResponse("Patient not found", 404);
+    if (!response) throw new ErrorResponse("Patient not found", 201);
     res
       .cookie("_id", response._id, {
         maxAge: 1000 * 60 * 60 * 24 * 7,

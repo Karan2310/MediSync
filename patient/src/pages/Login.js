@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "@mantine/form";
 import { auth } from "../firebase.js";
 
-import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
-
 import {
   TextInput,
   PasswordInput,
@@ -26,7 +24,6 @@ export default function Login() {
   const [otpSent, setOtpSent] = useState(false);
   const [otpConfirm, setOtpConfirm] = useState(false);
   const [otp, setOtp] = useState("");
-  const [user, setUser] = useState(null);
 
   const navigate = useNavigate();
   const [cookies] = useCookies();
@@ -34,10 +31,7 @@ export default function Login() {
   const userData = useSelector((state) => state.user);
 
   useEffect(() => {
-    console.log("login");
-    console.log(cookies._id);
     if (cookies._id) {
-      console.log("cookies hai: ", cookies._id);
       navigate("/home");
     }
   }, [cookies]);
@@ -56,20 +50,7 @@ export default function Login() {
 
   const handleSendOTP = async () => {
     try {
-      const PhoneNumber = "+91" + form.values.phone_number;
-      const recaptcha = new RecaptchaVerifier(auth, "recaptcha", {});
-      const confirmation = await signInWithPhoneNumber(
-        auth,
-        PhoneNumber,
-        recaptcha
-      );
-
-      console.log(confirmation);
-      setUser(confirmation);
-      alert("OTP sent successfully!");
-
       setOtpSent(true);
-      console.log(form.values);
     } catch (error) {
       console.error("Error sending OTP:", error);
     }
@@ -77,7 +58,6 @@ export default function Login() {
 
   const handleVerifyOTP = async () => {
     try {
-      await user.confirm(otp);
       const response = await axios.get(
         `/api/patient/verify/${form.values.phone_number}`
       );
@@ -86,27 +66,22 @@ export default function Login() {
         navigate("/home");
       } else {
         setOtpConfirm(true);
-        alert("OTP verified!");
       }
     } catch (error) {
       console.error("Error verifying OTP:", error);
     }
   };
 
-  const handleSignUpSubmit = async (values) => {
+  const handleSignUpSubmit = async () => {
     console.log(form.values);
     try {
       const { data } = await axios.post("api/patient/login/", form.values);
       console.log(data);
-
-      alert(`Welcome ${values.name}! You are now registered.`);
       navigate("/home");
-      console.log(form);
+      form.reset();
     } catch (err) {
       console.log(err);
-      alert(`Something went wrong: ${err.response && err.response.data.msg}`);
-    } finally {
-      form.reset();
+      alert(err.response.data.error || err.message);
     }
   };
 
@@ -127,7 +102,7 @@ export default function Login() {
         </Text>
         <Divider my="lg"></Divider>
         {otpConfirm ? (
-          <form onSubmit={form.onSubmit((value) => handleSignUpSubmit(value))}>
+          <form onSubmit={form.onSubmit(handleSignUpSubmit)}>
             <Stack>
               <TextInput
                 required

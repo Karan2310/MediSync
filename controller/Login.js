@@ -1,5 +1,6 @@
 import HospitalSchema from "../models/HospitalSchema.js";
 import DoctorSchema from "../models/DoctorSchema.js";
+import PatientSchema from "../models/PatientSchema.js";
 import ErrorResponse from "../utils/errorResponse.js";
 
 const HospitalLogin = async (req, res, next) => {
@@ -43,7 +44,7 @@ const DoctorLogin = async (req, res, next) => {
   }
 };
 
-const PatientLogin = async (req, res) => {
+const PatientLogin = async (req, res, next) => {
   try {
     const { name, age, phone_number, gender, habits, lifestyle } = req.body;
     let response = await PatientSchema.findOne({
