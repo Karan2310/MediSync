@@ -310,7 +310,7 @@ const AppointmentsScreen = () => {
             }}
           >
             Upcoming Appointments{" "}
-            {`(${upcomingAppointments && upcomingAppointments.length})`}
+            {`(${(upcomingAppointments && upcomingAppointments.length) || 0})`}
           </Text>
 
           {upcomingAppointments && upcomingAppointments.length > 0 ? (

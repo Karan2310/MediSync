@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import StateContext from "../context/StateContext";
 import axios from "axios";
@@ -27,7 +28,12 @@ const Profile = ({ navigation }) => {
   };
 
   const [isEnabled, setIsEnabled] = useState(true);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  const toggleSwitch = () => {
+    Alert.alert(
+      "Hospital Admin will be notified about your availability change"
+    );
+    setIsEnabled((previousState) => !previousState);
+  };
   function formatDate(inputDate) {
     const date = new Date(inputDate);
 
@@ -101,7 +107,7 @@ const Profile = ({ navigation }) => {
             justifyContent: "space-between",
           }}
         >
-          <Text style={{ ...styles.title, fontSize: 30 }}>Profile</Text>
+          <Text style={{ ...styles.title, fontSize: 26 }}>Profile</Text>
         </View>
         <View
           style={{
