@@ -25,7 +25,7 @@ const MapComponent = () => {
     { latitude: 22.792516, longitude: 75.7814486 },
   ]);
 
-  const DEFAULT_COORDINATES = [72.868506, 19.0460631];
+  const DEFAULT_COORDINATES = [72.8465408, 19.1987712];
 
   const createHospitalHotspot = (coordinates) => {
     const center = fromLonLat(coordinates);
@@ -41,7 +41,7 @@ const MapComponent = () => {
     });
   };
 
-  const setMapView = (coordinates, zoom = 12) => {
+  const setMapView = (coordinates, zoom = 15) => {
     if (map) {
       map.getView().setCenter(fromLonLat(coordinates));
       map.getView().setZoom(zoom);
@@ -59,7 +59,7 @@ const MapComponent = () => {
         ],
         view: new View({
           center: fromLonLat(DEFAULT_COORDINATES),
-          zoom: 12,
+          zoom: 12, // Initial zoom level before user location is obtained
         }),
       });
       setMap(newMap);
@@ -94,7 +94,7 @@ const MapComponent = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setMapView([longitude, latitude], 15);
+          setMapView([longitude, latitude]);
         },
         (error) => {
           console.error("Error getting current location:", error);
@@ -115,15 +115,6 @@ const MapComponent = () => {
 
         hospitalVectorLayer.getSource().addFeatures(hospitalHotspotFeatures);
 
-        const avgLat =
-          hospitals.reduce((acc, curr) => acc + curr.latitude, 0) /
-          hospitals.length;
-        const avgLon =
-          hospitals.reduce((acc, curr) => acc + curr.longitude, 0) /
-          hospitals.length;
-
-        setMapView([avgLon, avgLat]);
-      } else {
         setMapView(DEFAULT_COORDINATES);
       }
     }
