@@ -153,9 +153,19 @@ const AppointmentsScreen = () => {
           <Text style={{ fontSize: 16, fontWeight: "600", marginVertical: 5 }}>
             Date: {formatDate(selectedPatient?.date)}
           </Text>
-          <Text style={{ fontSize: 16, fontWeight: "600", marginVertical: 5 }}>
-            Time: {selectedPatient?.alloted_time}
-          </Text>
+          {selectedPatient.type === "online" ? (
+            <Text
+              style={{ fontSize: 16, fontWeight: "600", marginVertical: 5 }}
+            >
+              Time: {selectedPatient?.alloted_time}
+            </Text>
+          ) : (
+            <Text
+              style={{ fontSize: 16, fontWeight: "600", marginVertical: 5 }}
+            >
+              Walkin Appointment
+            </Text>
+          )}
         </View>
 
         <TouchableOpacity
@@ -343,7 +353,11 @@ const AppointmentsScreen = () => {
                     </View>
                     <View style={{ marginLeft: 20 }}>
                       <Text
-                        style={{ fontWeight: "600", width: 130 }}
+                        style={{
+                          fontWeight: "600",
+                          width: 100,
+                          marginRight: 30,
+                        }}
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
@@ -357,16 +371,23 @@ const AppointmentsScreen = () => {
                           right: 0,
                         }}
                       >
-                        {`(${patient.severity_index})`}
+                        {`(${patient.severity_index.toFixed(1)})`}
                       </Text>
 
                       <View style={{ marginTop: 10 }}>
                         <Text style={styles.silent}>
                           Age : {patient.patient.age}
                         </Text>
-                        <Text style={{ ...styles.silent, marginTop: 5 }}>
-                          Time : {patient.alloted_time}
-                        </Text>
+
+                        {patient.type === "online" ? (
+                          <Text style={{ ...styles.silent, marginTop: 5 }}>
+                            Time : {patient.alloted_time || "Not Alloted"}
+                          </Text>
+                        ) : (
+                          <Text style={{ ...styles.silent, marginTop: 5 }}>
+                            WalkIn Appointment
+                          </Text>
+                        )}
                       </View>
                     </View>
                   </View>
