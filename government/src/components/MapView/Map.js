@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "ol/ol.css";
 import Map from "ol/Map";
+import View from "ol/View";
 import TileLayer from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
 import Feature from "ol/Feature";
 import Point from "ol/geom/Point";
-import Circle from "ol/geom/Circle";
 import { fromLonLat } from "ol/proj";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
-import { Style, Fill } from "ol/style";
+import { Style, Icon } from "ol/style";
 import axios from "axios";
 import { Select } from "@mantine/core";
+import pin from "./pin.png";
 
 const MapComponent = () => {
   const [map, setMap] = useState(null);
@@ -23,9 +24,8 @@ const MapComponent = () => {
 
   const createHospitalHotspot = (coordinates) => {
     const center = fromLonLat(coordinates);
-    const circle = new Circle(center, 2000); // 20 meters radius
     return new Feature({
-      geometry: circle,
+      geometry: new Point(center),
     });
   };
 
@@ -40,15 +40,25 @@ const MapComponent = () => {
     if (!map) {
       const newMap = new Map({
         target: "map",
-        layers: [new TileLayer({ source: new OSM() })],
+        layers: [
+          new TileLayer({
+            source: new OSM(),
+          }),
+        ],
+        view: new View({
+          center: fromLonLat(DEFAULT_COORDINATES),
+          zoom: 12,
+        }),
       });
       setMap(newMap);
 
       const hospitalVectorLayer = new VectorLayer({
         source: new VectorSource(),
         style: new Style({
-          fill: new Fill({
-            color: "rgba(255, 0, 0, 0.1)", // Red fill with opacity
+          image: new Icon({
+            anchor: [0.5, 1],
+            src: pin,
+            scale: 0.1,
           }),
         }),
       });
@@ -61,10 +71,11 @@ const MapComponent = () => {
         (position) => {
           const { latitude, longitude } = position.coords;
           setMapView([longitude, latitude], 15); // Zoom level set to 15 (adjust as needed)
+          newMap.getView().setCenter(fromLonLat([longitude, latitude]));
+          newMap.getView().setZoom(15); // Adjust the initial zoom level as needed
         },
         (error) => {
           console.error("Error getting current location:", error);
-          setMapView(DEFAULT_COORDINATES);
         }
       );
     }
@@ -113,7 +124,7 @@ const MapComponent = () => {
 
   const getHospitals = async () => {
     try {
-      const { data } = await axios.get("/api/appointment/hospitals");
+      const { data } = await axios.get("/api/hospitals");
       const hospitalCoords = data.map((hospital) => ({
         latitude: hospital.coordinates.latitude,
         longitude: hospital.coordinates.longitude,
@@ -155,7 +166,7 @@ const MapComponent = () => {
         <div
           id="map"
           className="map"
-          style={{ width: "1300px", height: "600px" }}
+          style={{ width: "100%", height: "100%" }}
         ></div>
       </div>
     </>
