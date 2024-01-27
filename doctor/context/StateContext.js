@@ -52,14 +52,32 @@ export const StateProvider = ({ children }) => {
         const dateB = new Date(b.date);
         return dateA - dateB;
       });
-
       setDoctorData({
         ...data,
         availability: sortedAvailability,
       });
     } catch (error) {
-      console.log(error.response.data.error || error.message);
-      Alert.alert(error.response.data.error || error.message);
+      const errorMessage = error.response?.data?.error || error.message;
+
+      Alert.alert(
+        "Error",
+        errorMessage,
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("No Pressed"),
+            style: "destructive",
+          },
+          {
+            text: "Retry",
+            style: "default",
+            onPress: () => {
+              getProfile();
+            },
+          },
+        ],
+        { cancelable: false }
+      );
     } finally {
       setLoading(false);
     }

@@ -159,6 +159,10 @@ const Profile = ({ navigation }) => {
             <Text style={styles.infoText}>
               License Number: {doctorData && doctorData.license_number}
             </Text>
+            <Text style={styles.infoText}>
+              Average Treatment Time: {doctorData && doctorData.average_time}{" "}
+              mins
+            </Text>
           </View>
           <View
             style={{

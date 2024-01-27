@@ -289,6 +289,15 @@ const AppointmentsScreen = () => {
             <Text style={{ ...styles.title, fontSize: 30 }}>
               Hi, {doctorData && getTitleAndFirstName(doctorData.name)}
             </Text>
+            <Ionicons
+              onPress={() => {
+                getProfile();
+              }}
+              name="refresh-outline"
+              size={20}
+              color="white"
+              style={{ transform: "rotate(30deg)" }}
+            />
           </View>
         </View>
         <View style={{ marginVertical: 10 }}>

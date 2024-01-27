@@ -44,7 +44,7 @@ const AppointmentTabs = () => {
         // }}
         options={{
           tabBarLabel: `Today (${
-            doctorData && doctorData.today_appointment.length
+            (doctorData && doctorData.today_appointment.length) || 0
           })`,
         }}
       />
@@ -56,7 +56,7 @@ const AppointmentTabs = () => {
           tabBarLabel:
             doctorData && doctorData.next_date
               ? `${formatDate(doctorData.next_date)} (${
-                  doctorData && doctorData.next_date_appointment.length
+                  (doctorData && doctorData.next_date_appointment.length) || 0
                 })`
               : "None",
         }}
