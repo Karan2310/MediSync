@@ -249,31 +249,46 @@ const PatientDetailsScreen = ({ route }) => {
 
         <View style={{ width: "100%", marginTop: 40 }}>
           <Text style={styles.title}>Previous Visits</Text>
-          <View
-            style={{
-              backgroundColor: "#f2f2f2",
-              padding: 20,
-              paddingVertical: 10,
-              borderRadius: 20,
-            }}
-          >
-            <View style={{ ...styles.previousVisitItem, marginBottom: 10 }}>
-              <Text style={styles.titleText}>Date</Text>
-              <Text style={styles.titleText}>Treated By</Text>
-            </View>
-
-            <ScrollView
-              style={{ maxHeight: 400 }}
-              showsVerticalScrollIndicator={false}
+          {patientData &&
+          patientData.past_visit &&
+          patientData.past_visit.length > 0 ? (
+            <View
+              style={{
+                backgroundColor: "#f2f2f2",
+                padding: 20,
+                paddingVertical: 10,
+                borderRadius: 20,
+              }}
             >
-              <FlatList
-                data={patientData && patientData.past_visit}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={renderPreviousVisitItem}
+              <View style={{ ...styles.previousVisitItem, marginBottom: 10 }}>
+                <Text style={styles.titleText}>Date</Text>
+                <Text style={styles.titleText}>Treated By</Text>
+              </View>
+
+              <ScrollView
+                style={{ maxHeight: 400 }}
                 showsVerticalScrollIndicator={false}
-              />
-            </ScrollView>
-          </View>
+              >
+                <FlatList
+                  data={patientData.past_visit}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={renderPreviousVisitItem}
+                  showsVerticalScrollIndicator={false}
+                />
+              </ScrollView>
+            </View>
+          ) : (
+            <View
+              style={{
+                backgroundColor: "#f2f2f2",
+                padding: 20,
+                paddingVertical: 20,
+                borderRadius: 20,
+              }}
+            >
+              <Text style={{ fontWeight: 600 }}>No Previous Visits</Text>
+            </View>
+          )}
         </View>
 
         <View style={{ width: "100%", marginTop: 40 }}>
@@ -363,10 +378,18 @@ const PatientDetailsScreen = ({ route }) => {
               borderRadius: 20,
             }}
           >
-            <View style={{ ...styles.previousVisitItem, marginBottom: 10 }}>
-              <Text style={styles.titleText}>Date</Text>
-              <Text style={styles.titleText}>View</Text>
-            </View>
+            {patientData &&
+            patientData.reports &&
+            patientData.reports.length > 0 ? (
+              <View style={{ ...styles.previousVisitItem, marginBottom: 10 }}>
+                <Text style={styles.titleText}>Date</Text>
+                <Text style={styles.titleText}>View</Text>
+              </View>
+            ) : (
+              <Text style={{ fontWeight: 600, paddingVertical: 10 }}>
+                No Reports
+              </Text>
+            )}
 
             <ScrollView
               style={{ maxHeight: 400 }}
@@ -392,10 +415,16 @@ const PatientDetailsScreen = ({ route }) => {
               borderRadius: 20,
             }}
           >
-            <View style={{ ...styles.previousVisitItem, marginBottom: 10 }}>
-              <Text style={styles.titleText}>Date</Text>
-              <Text style={styles.titleText}>View</Text>
-            </View>
+            {prescription && prescription.length > 0 ? (
+              <View style={{ ...styles.previousVisitItem, marginBottom: 10 }}>
+                <Text style={styles.titleText}>Date</Text>
+                <Text style={styles.titleText}>View</Text>
+              </View>
+            ) : (
+              <Text style={{ fontWeight: 600, paddingVertical: 10 }}>
+                No Prescriptions
+              </Text>
+            )}
 
             <ScrollView
               style={{ maxHeight: 400 }}

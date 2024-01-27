@@ -70,10 +70,12 @@ const TomorrowsPatient = () => {
         >
           {item.patient.name}
         </Text>
-        <Text style={{ ...styles.labelText, marginTop: 10 }}>
+        <Text style={{ ...styles.labelText, marginTop: 10, marginBottom: 4 }}>
           Date: {formatDate(item.date)}
         </Text>
-        <Text style={styles.labelText}>Time: {item?.alloted_time}</Text>
+        <Text style={styles.labelText}>
+          Time: {item?.alloted_time || "yet to be alloted!"}
+        </Text>
       </View>
     </TouchableOpacity>
   );

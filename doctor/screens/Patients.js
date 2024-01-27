@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 60,
     fontWeight: "600",
-    fontSize: 17,
+    fontSize: 16,
     borderWidth: 2,
     borderStyle: "solid",
     borderColor: "transparent",
