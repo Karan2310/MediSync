@@ -6,6 +6,9 @@ import {
   DoctorInfo,
   HospitalDoctorsList,
   AllDoctors,
+  HospitalSpecialization,
+  HospitalSpecializedDoctors,
+  SpecializedHospitals,
 } from "../controller/Doctor.js";
 import { DoctorLogin } from "../controller/Login.js";
 import fieldHandler from "../middleware/fieldHandler.js";
@@ -73,5 +76,33 @@ router.get(
 );
 
 router.get("/doctors", AllDoctors);
+
+router.get(
+  "/doctors/specialization/:hospital_id",
+  param("hospital_id").trim().notEmpty().withMessage("Hospital ID is required"),
+  fieldHandler,
+  HospitalSpecialization
+);
+
+router.get(
+  "/doctors/specialization/:hospital_id/:specialization",
+  param("hospital_id").trim().notEmpty().withMessage("Hospital ID is required"),
+  param("specialization")
+    .trim()
+    .notEmpty()
+    .withMessage("Specialization is required"),
+  fieldHandler,
+  HospitalSpecializedDoctors
+);
+
+router.get(
+  "/hospitals/specialization/:specialization",
+  param("specialization")
+    .trim()
+    .notEmpty()
+    .withMessage("Specialization is required"),
+  fieldHandler,
+  SpecializedHospitals
+);
 
 export default router;

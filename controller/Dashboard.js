@@ -4,6 +4,7 @@ import AttendanceSchema from "../models/AttendanceSchema.js";
 import LogSchema from "../models/LogSchema.js";
 import PatientSchema from "../models/PatientSchema.js";
 import HospitalSchema from "../models/HospitalSchema.js";
+import ReportSchema from "../models/ReportSchema.js";
 import ErrorResponse from "../utils/errorResponse.js";
 import mongoose from "mongoose";
 const { ObjectId } = mongoose.Types;

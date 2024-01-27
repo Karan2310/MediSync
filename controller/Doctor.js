@@ -138,4 +138,69 @@ const AllDoctors = async (req, res, next) => {
   }
 };
 
-export { Register, DeleteDoctor, DoctorInfo, HospitalDoctorsList, AllDoctors };
+const HospitalSpecialization = async (req, res, next) => {
+  const { hospital_id } = req.params;
+  try {
+    const specialization = await DoctorSchema.find({
+      hospital_id,
+    })
+      .distinct("specialization")
+      .lean();
+    res.status(200).json(specialization);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const HospitalSpecializedDoctors = async (req, res, next) => {
+  const { hospital_id, specialization } = req.params;
+  try {
+    const doctors = await DoctorSchema.find({
+      hospital_id,
+      specialization,
+    }).lean();
+    for (let doctor of doctors) {
+      const today = new Date();
+      const sorted_availability = doctor.availability.sort(
+        (dateA, dateB) => Number(dateA.date) - Number(dateB.date)
+      );
+      doctor.availability = sorted_availability;
+      const filter_availability = doctor.availability.filter((item) => {
+        const itemDate = new Date(item.date);
+        return itemDate >= today;
+      });
+      doctor.availability = filter_availability;
+    }
+    res.status(200).json(doctors);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const SpecializedHospitals = async (req, res, next) => {
+  try {
+    const { specialization } = req.params;
+    const hospital_ids = await DoctorSchema.find({
+      specialization,
+    }).distinct("hospital_id");
+    const hospitals = await HospitalSchema.find({
+      _id: {
+        $in: hospital_ids,
+      },
+    }).lean();
+    res.status(200).json(hospitals);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export {
+  Register,
+  DeleteDoctor,
+  DoctorInfo,
+  HospitalDoctorsList,
+  AllDoctors,
+  HospitalSpecialization,
+  HospitalSpecializedDoctors,
+  SpecializedHospitals,
+};
