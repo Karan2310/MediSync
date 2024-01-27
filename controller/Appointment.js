@@ -396,6 +396,51 @@ const AutoBookedPatientSlot = async () => {
   }
 };
 
+const TodayWalkInAppointment = async (req, res, next) => {
+  try {
+    const { hospital_id } = req.params;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const today_walk_in_appointment = await AppointmentSchema.aggregate([
+      {
+        $match: {
+          hospital_id: new ObjectId(hospital_id),
+          date: {
+            $gte: today,
+            $lte: new Date(today.getTime() + 24 * 60 * 60 * 1000),
+          },
+          type: "walk_in",
+        },
+      },
+      {
+        $lookup: {
+          from: "patients",
+          localField: "patient_id",
+          foreignField: "_id",
+          as: "patient",
+        },
+      },
+      {
+        $unwind: "$patient",
+      },
+      {
+        $lookup: {
+          from: "doctors",
+          localField: "doctor_id",
+          foreignField: "_id",
+          as: "doctor",
+        },
+      },
+      {
+        $unwind: "$doctor",
+      },
+    ]);
+    res.status(200).json(today_walk_in_appointment);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export {
   OnlineRegister,
   WalkInRegister,
@@ -408,4 +453,5 @@ export {
   AllocateTodayAppointmentSlot,
   DiseaseAppointment,
   AutoBookedPatientSlot,
+  TodayWalkInAppointment,
 };
