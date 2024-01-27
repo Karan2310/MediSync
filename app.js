@@ -10,6 +10,7 @@ import errorHandler from "./middleware/errorHandler.js";
 import HospitalRoute from "./routes/HospitalRoute.js";
 import DoctorRoute from "./routes/DoctorRoute.js";
 import DashboardRoute from "./routes/DashboardRoute.js";
+import LogRoute from "./routes/LogRoute.js";
 import IndexRoute from "./routes/index.js";
 
 const app = express();
@@ -24,6 +25,7 @@ app.use(fileUpload());
 app.use("/api", HospitalRoute);
 app.use("/api", DoctorRoute);
 app.use("/api", DashboardRoute);
+app.use("/api", LogRoute);
 app.use("/api", IndexRoute);
 
 app.use(errorHandler);
