@@ -27,7 +27,7 @@ const PatientRegister = async (req, res, next) => {
 const DoctorRegister = async (req, res, next) => {
   try {
     const { patient_id, doctor_id } = req.body;
-    const { image } = req.files;
+    const { image } = req.body;
     if (!image) throw new ErrorResponse("No file is uploaded", 400);
     const report = await ReportSchema({
       patient_id,
@@ -35,8 +35,8 @@ const DoctorRegister = async (req, res, next) => {
       type: "doctor",
     });
     const response = await ImageSchema.create({
-      data: image.data,
-      contentType: image.mimetype,
+      data: image,
+      contentType: "image/png",
     });
     report.report_id = response._id;
     await report.save();

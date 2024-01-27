@@ -12,6 +12,7 @@ import {
 import { Linking } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import StateContext from "../context/StateContext";
+import { SERVER_URL } from "../config";
 
 const PatientDetailsScreen = ({ route }) => {
   const { patient } = route.params;
@@ -139,7 +140,11 @@ const PatientDetailsScreen = ({ route }) => {
         )}
       </View>
 
-      <TouchableOpacity onPress={() => handleLinkPress(item.url)}>
+      <TouchableOpacity
+        onPress={() =>
+          handleLinkPress(`${SERVER_URL}/api/image/${item.report_id}`)
+        }
+      >
         <Text
           style={{
             ...styles.infoText,
