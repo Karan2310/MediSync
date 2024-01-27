@@ -101,16 +101,13 @@ const Appointments = () => {
     useState(false);
 
   const [cookies] = useCookies(["token"]);
-  const BookFormData = useSelector((state) => state.app.formData);
 
   useEffect(() => {
-    const fetchHospitals = async () => {
+    (async () => {
       const { data } = await axios.get("/api/hospitals");
       setHospitals(data);
       console.log(data);
-    };
-    console.log(BookFormData);
-    fetchHospitals();
+    })();
   }, []);
 
   const handleSpecialization = async (hospital) => {
