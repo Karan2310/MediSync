@@ -13,7 +13,6 @@ import {
 
 import { useForm } from "@mantine/form";
 import { IconFile } from "@tabler/icons-react";
-import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { useSelector } from "react-redux";
@@ -65,10 +64,6 @@ const Table = ({ data, columns }) => {
                 <td>{new Date(item.date).toLocaleDateString("en-GB")}</td>
                 <td>{item.time_slot}</td>
                 <td>{item.hospital.name}</td>
-
-                <td>
-                  <NavLink to={item.reportlink}>Report</NavLink>
-                </td>
                 <td>
                   {item.rating === 0 ? (
                     <div className="d-flex align-items-center justify-content-center">
@@ -231,19 +226,15 @@ const Profile = () => {
                   <div className="d-flex flex-wrap">
                     {patient.reports &&
                       patient.reports.map((file, index) => (
-                        // <h1>ok</h1>
                         <div className="p-2 bg-light rounded mt-2">
                           <Image
-                            onClick={() => {
-                              window.open(file.url, "_blank");
-                            }}
                             style={{
                               width: "80px",
                               margin: "5px",
                               cursor: "pointer",
                             }}
                             key={index}
-                            src={file.url}
+                            src={"/api/image/" + file.report_id}
                             alt={`Image ${index}`}
                           />
                         </div>
@@ -367,7 +358,6 @@ const Profile = () => {
             "Date",
             "Timeslot",
             "HospitalName",
-            "Reports",
             "Votes",
           ]}
         />
