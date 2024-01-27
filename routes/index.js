@@ -4,6 +4,10 @@ import fieldHandler from "../middleware/fieldHandler.js";
 
 const router = express.Router();
 
+router.get("/logout", async (req, res) => {
+  res.clearCookie("_id").status(200).end();
+});
+
 router.get(
   "/image/:image_name",
   param("image_name").trim().notEmpty().withMessage("Image Name is required"),

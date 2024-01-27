@@ -7,10 +7,9 @@ db();
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import errorHandler from "./middleware/errorHandler.js";
-// const IndexRoute = require("./routes/index");
-// const ClientSideRoute = require("./routes/clientSide");
-// const CookieRoute = require("./routes/cookie");
 import HospitalRoute from "./routes/HospitalRoute.js";
+import DoctorRoute from "./routes/DoctorRoute.js";
+import DashboardRoute from "./routes/DashboardRoute.js";
 import IndexRoute from "./routes/index.js";
 
 const app = express();
@@ -23,11 +22,14 @@ app.use(cookieParser());
 app.use(fileUpload());
 
 app.use("/api", HospitalRoute);
-// app.use("/api/field", IndexRoute);
-// app.use("/api/auth/client", ClientSideRoute);
-// app.use("/api/cookie", CookieRoute);
+app.use("/api", DoctorRoute);
+app.use("/api", DashboardRoute);
 app.use("/api", IndexRoute);
 
 app.use(errorHandler);
+
+app.get("/", (req, res) => {
+  res.send("MediSync is up and running!!");
+});
 
 app.listen(port, () => console.log(`http://localhost:${port}`));
