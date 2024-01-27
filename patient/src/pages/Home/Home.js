@@ -16,42 +16,6 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Badge } from "@mantine/core";
 
-const Table = ({ data, columns }) => {
-  return (
-    <div
-      className="inner-container"
-      style={{ overflowY: "auto", maxHeight: "40vh" }}
-    >
-      <table className="table table-hover text-no-wrap">
-        <thead>
-          <tr>
-            {columns.map((col, index) => (
-              <th key={index} scope="col" className="text-no-wrap">
-                {col}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data &&
-            data.map((item, index) => (
-              <tr key={index}>
-                {columns.map((col, colIndex) => (
-                  <td key={colIndex} style={{ whiteSpace: "nowrap" }}>
-                    {item[col.toLowerCase()]}
-                  </td>
-                ))}
-                <td>
-                  <NavLink to={item.reportlink}>Report</NavLink>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
 const AppointmentCard = ({ value, index }) => {
   var index =
     value.today_appointment && value.today_appointment.length > 0
@@ -193,6 +157,11 @@ const Home = () => {
     (state) => state.app.appData.upcoming_appointment
   );
 
+  // Filter out appointments where treated is true
+  const upcomingAppointmentsNotTreated = appointmentUpcoming?.filter(
+    (appointment) => !appointment.treated
+  );
+
   const [doctors, setDoctors] = useState([
     {
       doctorname: "Dr. Karandeep Singh Sandhu",
@@ -279,8 +248,8 @@ const Home = () => {
           <h5>UPCOMING APPOINTMENT</h5>
           <div className="upcoming-appointments-container">
             <Grid>
-              {appointmentUpcoming &&
-                appointmentUpcoming.map((value, index) => (
+              {upcomingAppointmentsNotTreated &&
+                upcomingAppointmentsNotTreated?.map((value, index) => (
                   <AppointmentCard key={index} value={value} index={index} />
                 ))}
             </Grid>
