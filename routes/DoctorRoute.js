@@ -7,9 +7,18 @@ import {
   HospitalDoctorsList,
   AllDoctors,
 } from "../controller/Doctor.js";
+import { DoctorLogin } from "../controller/Login.js";
 import fieldHandler from "../middleware/fieldHandler.js";
 
 const router = express.Router();
+
+router.post(
+  "/doctor/login",
+  body("username").trim().notEmpty().withMessage("Username is required"),
+  body("password").trim().notEmpty().withMessage("Password is required"),
+  fieldHandler,
+  DoctorLogin
+);
 
 router.post(
   "/doctor/register/:hospital_id",
