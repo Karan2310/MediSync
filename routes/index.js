@@ -1,6 +1,7 @@
 import express from "express";
 import { param } from "express-validator";
 import fieldHandler from "../middleware/fieldHandler.js";
+import ImageSchema from "../models/ImageSchema.js";
 
 const router = express.Router();
 

@@ -106,11 +106,7 @@ const Register = () => {
     formData.append("start_time", values.start_time);
     formData.append("end_time", values.end_time);
     formData.append("average_time", values.average_time);
-    formData.append(
-      "file",
-      values.file,
-      values.doctor_name + "." + values.file.type.split("/")[1]
-    );
+    formData.append("image", values.file);
     try {
       dispatch(setLoading(true));
 
@@ -127,8 +123,9 @@ const Register = () => {
       setSelected([]);
       setImagePreview(null);
       console.log(data);
-    } catch (error) {
-      console.error("Error submitting data:", error);
+    } catch (err) {
+      console.log(err);
+      alert(err.response.data.error || err.message);
     } finally {
       dispatch(setLoading(false));
     }
