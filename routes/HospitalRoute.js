@@ -5,6 +5,7 @@ import {
   DeleteHospital,
   HospitalInfo,
   AllHospitals,
+  NearByHospitals,
 } from "../controller/Hospital.js";
 import { HospitalLogin } from "../controller/Login.js";
 import { RegistrationMail } from "../middleware/Email.js";
@@ -78,5 +79,13 @@ router.get(
 );
 
 router.get("/hospitals", AllHospitals);
+
+router.post(
+  "/nearby/hospitals",
+  body("latitude").trim().notEmpty().withMessage("Latitude is required"),
+  body("longitude").trim().notEmpty().withMessage("Longitude is required"),
+  fieldHandler,
+  NearByHospitals
+);
 
 export default router;
