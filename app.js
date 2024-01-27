@@ -15,6 +15,10 @@ import AttendanceRoute from "./routes/AttendanceRoute.js";
 import PatientRoute from "./routes/PatientRoute.js";
 import AppointmentRoute from "./routes/AppointmentRoute.js";
 import IndexRoute from "./routes/index.js";
+import {
+  AllocateDoctorSlot,
+  AllocateTodayDoctorSlot,
+} from "./controller/Doctor.js";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -35,6 +39,9 @@ app.use("/api", AppointmentRoute);
 app.use("/api", IndexRoute);
 
 app.use(errorHandler);
+
+// AllocateDoctorSlot();
+// AllocateTodayDoctorSlot();
 
 app.get("/", (req, res) => {
   res.send("MediSync is up and running!!");

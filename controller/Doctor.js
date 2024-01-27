@@ -1,8 +1,13 @@
 import ShortUniqueId from "short-unique-id";
+import HospitalSchema from "../models/HospitalSchema.js";
 import DoctorSchema from "../models/DoctorSchema.js";
 import ImageSchema from "../models/ImageSchema.js";
 import { calculateTotalMinutes } from "../utils/Function.js";
 import ErrorResponse from "../utils/errorResponse.js";
+import {
+  AllocateAppointmentSlot,
+  AllocateTodayAppointmentSlot,
+} from "./Appointment.js";
 
 const { randomUUID } = new ShortUniqueId({ length: 8 });
 
@@ -194,6 +199,30 @@ const SpecializedHospitals = async (req, res, next) => {
   }
 };
 
+const AllocateDoctorSlot = async () => {
+  const hospitals = await HospitalSchema.find().lean();
+  for (let hospital of hospitals) {
+    const doctors = await DoctorSchema.find({
+      hospital_id: hospital._id,
+    }).lean();
+    for (let doctor of doctors) {
+      await AllocateAppointmentSlot(doctor._id);
+    }
+  }
+};
+
+const AllocateTodayDoctorSlot = async () => {
+  const hospitals = await HospitalSchema.find().lean();
+  for (let hospital of hospitals) {
+    const doctors = await DoctorSchema.find({
+      hospital_id: hospital._id,
+    }).lean();
+    for (let doctor of doctors) {
+      await AllocateTodayAppointmentSlot(doctor._id);
+    }
+  }
+};
+
 export {
   Register,
   DeleteDoctor,
@@ -203,4 +232,6 @@ export {
   HospitalSpecialization,
   HospitalSpecializedDoctors,
   SpecializedHospitals,
+  AllocateDoctorSlot,
+  AllocateTodayDoctorSlot,
 };

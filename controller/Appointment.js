@@ -3,7 +3,7 @@ import DoctorSchema from "../models/DoctorSchema.js";
 import ReportSchema from "../models/ReportSchema.js";
 import PatientSchema from "../models/PatientSchema.js";
 import AlertSchema from "../models/AlertSchema.js";
-import { addMinutes } from "../utils/Function.js";
+import { addMinutes, minusMinutes } from "../utils/Function.js";
 import ErrorResponse from "../utils/errorResponse.js";
 import { severity, highSeverity } from "../utils/Severity.js";
 import mongoose from "mongoose";
@@ -255,6 +255,83 @@ const UpdateRating = async (req, res, next) => {
   }
 };
 
+const AllocateAppointmentSlot = async (doctor_id) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const dayAfterTomorrow = new Date(today);
+  dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+  const doctor = await DoctorSchema.findById(doctor_id);
+  let tomorrow_slot = doctor.availability.filter((item) => {
+    const itemDate = new Date(item.date);
+    return (
+      itemDate.getTime() >= tomorrow.getTime() &&
+      itemDate.getTime() < dayAfterTomorrow.getTime()
+    );
+  });
+  tomorrow_slot = tomorrow_slot[0] ? tomorrow_slot[0] : null;
+  if (tomorrow_slot == null) return;
+  const tomorrow_date = new Date(tomorrow_slot.date);
+  tomorrow_date.setHours(0, 0, 0, 0);
+  const tomorrow_appointment = await AppointmentSchema.find({
+    doctor_id: new ObjectId(doctor_id),
+    date: {
+      $gte: tomorrow_date,
+      $lte: new Date(tomorrow_date.getTime() + 24 * 60 * 60 * 1000),
+    },
+    treated: false,
+  }).sort({
+    severity_index: -1,
+    severity_count: -1,
+  });
+  let tomorrow_time = minusMinutes(
+    tomorrow_slot.start_time,
+    doctor.average_time
+  );
+  for (const object of tomorrow_appointment) {
+    object.alloted_time = addMinutes(tomorrow_time, doctor.average_time);
+    tomorrow_time = object.alloted_time;
+  }
+  await Promise.all(tomorrow_appointment.map((item) => item.save()));
+};
+
+const AllocateTodayAppointmentSlot = async (doctor_id) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const doctor = await DoctorSchema.findById(doctor_id);
+  let today_slot = doctor.availability.filter((item) => {
+    const itemDate = new Date(item.date);
+    return (
+      itemDate.getTime() >= today.getTime() &&
+      itemDate.getTime() < tomorrow.getTime()
+    );
+  });
+  today_slot = today_slot[0] ? today_slot[0] : null;
+  if (today_slot == null) return;
+  const today_date = new Date(today_slot.date);
+  today_date.setHours(0, 0, 0, 0);
+  const tomorrow_appointment = await AppointmentSchema.find({
+    doctor_id: new ObjectId(doctor_id),
+    date: {
+      $gte: today_date,
+      $lte: new Date(today_date.getTime() + 24 * 60 * 60 * 1000),
+    },
+    treated: false,
+  }).sort({
+    severity_index: -1,
+    severity_count: -1,
+  });
+  let today_time = minusMinutes(today_slot.start_time, doctor.average_time);
+  for (const object of tomorrow_appointment) {
+    object.alloted_time = addMinutes(today_time, doctor.average_time);
+    today_time = object.alloted_time;
+  }
+  await Promise.all(tomorrow_appointment.map((item) => item.save()));
+};
+
 export {
   OnlineRegister,
   WalkInRegister,
@@ -263,4 +340,6 @@ export {
   DoctorAvailableSlots,
   MarkAsDone,
   UpdateRating,
+  AllocateAppointmentSlot,
+  AllocateTodayAppointmentSlot,
 };
