@@ -1,11 +1,12 @@
-<<<<<<< HEAD
 node_modules
 .env
-=======
 .DS_Store
 node_modules
 /node_modules
 config.js
 .env
 firebase.js
->>>>>>> 3e55295 (Gornment Regform added)
+__pycache__
+venv
+myenv
+.idea
