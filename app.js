@@ -12,6 +12,7 @@ import DoctorRoute from "./routes/DoctorRoute.js";
 import DashboardRoute from "./routes/DashboardRoute.js";
 import LogRoute from "./routes/LogRoute.js";
 import AttendanceRoute from "./routes/AttendanceRoute.js";
+import PatientRoute from "./routes/PatientRoute.js";
 import IndexRoute from "./routes/index.js";
 
 const app = express();
@@ -28,6 +29,7 @@ app.use("/api", DoctorRoute);
 app.use("/api", DashboardRoute);
 app.use("/api", LogRoute);
 app.use("/api", AttendanceRoute);
+app.use("/api", PatientRoute);
 app.use("/api", IndexRoute);
 
 app.use(errorHandler);
