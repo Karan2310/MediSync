@@ -20,6 +20,7 @@ import {
   AllocateDoctorSlot,
   AllocateTodayDoctorSlot,
 } from "./controller/Doctor.js";
+import { AutoBookedPatientSlot } from "./controller/Appointment.js";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -44,6 +45,7 @@ app.use(errorHandler);
 
 // AllocateDoctorSlot();
 // AllocateTodayDoctorSlot();
+// AutoBookedPatientSlot();
 
 app.get("/", (req, res) => {
   res.send("MediSync is up and running!!");
