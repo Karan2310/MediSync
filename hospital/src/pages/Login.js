@@ -41,10 +41,9 @@ export default function Login() {
       Navigate("/dashboard");
     } catch (err) {
       console.log(err);
-      alert(`Something went wrong: ${err.response && err.response.data}`);
-    } finally {
-      setLoading(false);
+      alert(err.response.data.error || err.message);
     }
+    setLoading(false);
   };
 
   return (
