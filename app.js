@@ -14,6 +14,7 @@ import LogRoute from "./routes/LogRoute.js";
 import AttendanceRoute from "./routes/AttendanceRoute.js";
 import PatientRoute from "./routes/PatientRoute.js";
 import AppointmentRoute from "./routes/AppointmentRoute.js";
+import ReportRoute from "./routes/ReportRoute.js";
 import IndexRoute from "./routes/index.js";
 import {
   AllocateDoctorSlot,
@@ -36,6 +37,7 @@ app.use("/api", LogRoute);
 app.use("/api", AttendanceRoute);
 app.use("/api", PatientRoute);
 app.use("/api", AppointmentRoute);
+app.use("/api", ReportRoute);
 app.use("/api", IndexRoute);
 
 app.use(errorHandler);

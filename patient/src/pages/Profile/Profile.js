@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Profile.css";
 import {
   Avatar,
@@ -8,17 +8,15 @@ import {
   Image,
   FileInput,
   Button,
-  TextInput,
-  Select,
   MultiSelect,
 } from "@mantine/core";
 
 import { useForm } from "@mantine/form";
-import { IconFile, IconH1 } from "@tabler/icons-react";
+import { IconFile } from "@tabler/icons-react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Table = ({ data, columns }) => {
   const upvote = async (id) => {
@@ -119,30 +117,31 @@ const Profile = () => {
   const [cookies] = useCookies();
   const patient = useSelector((state) => state.app.appData);
 
-  const [pdfPreview, setPdfPreview] = useState([]);
+  const [imagePreview, setImagePreview] = useState();
 
   const handleImageUpload = (file) => {
     form.setFieldValue("file", file);
 
-    form.setFieldValue("file", file);
-
     const previewUrl = URL.createObjectURL(file);
-    setPdfPreview(previewUrl);
+    setImagePreview(previewUrl);
   };
 
   const handleSubmit = async (values) => {
     try {
       const formData = new FormData();
-      formData.append("file", values.file);
+      formData.append("image", values.file);
       formData.append("disease", JSON.stringify(values.pastMedicalCondition));
       formData.append("patient_id", cookies._id);
-      formData.append("type", "patient");
-      const response = await axios.post("/api/report/register", formData);
+      const response = await axios.post(
+        "/api/report/register/patient",
+        formData
+      );
       console.log(response);
       alert("Medical History Submitted successfully");
       window.location.reload();
     } catch (error) {
-      console.error(error);
+      console.log(error);
+      alert(error.response.data.error || error.message);
     }
   };
 
@@ -337,19 +336,17 @@ const Profile = () => {
                 <Grid>
                   <Grid.Col span={12} mt={20}>
                     {/* Preview Image */}
-                    {pdfPreview && (
+                    {imagePreview && (
                       <div>
-                        <object
-                          data={pdfPreview}
-                          type="application/pdf"
-                          width="100%"
-                          height="100%"
-                        >
-                          <p>
-                            It appears you don't have a PDF plugin for this
-                            browser.
-                          </p>
-                        </object>
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          style={{
+                            width: "100%",
+                            height: "auto",
+                            maxWidth: "300px",
+                          }}
+                        />
                       </div>
                     )}
                   </Grid.Col>
