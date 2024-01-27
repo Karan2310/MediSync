@@ -19,9 +19,7 @@ const TopBar = ({ ToggleMenu }) => {
                 cursor: "pointer",
               }}
             ></i>
-            <p className="fw-bold title">
-              {hospitalData && hospitalData.name}Hospital
-            </p>
+            <p className="fw-bold title">{hospitalData && hospitalData.name}</p>
           </div>
           <div
             className="col-3 col-md-2"
