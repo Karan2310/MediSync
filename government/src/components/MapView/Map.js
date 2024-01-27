@@ -20,10 +20,7 @@ const MapComponent = () => {
   const [diseaseVectorLayer, setDiseaseVectorLayer] = useState(null);
   const [hospitals, setHospitals] = useState([]);
   const [disease, setDisease] = useState("");
-  const [diseaseHotspots, setDiseaseHotspots] = useState([
-    { latitude: 22.7239516, longitude: 75.7814486 },
-    { latitude: 22.792516, longitude: 75.7814486 },
-  ]);
+  const [diseaseHotspots, setDiseaseHotspots] = useState([]);
 
   const DEFAULT_COORDINATES = [72.8465408, 19.1987712];
 
@@ -140,10 +137,20 @@ const MapComponent = () => {
       const { data } = await axios.get(
         `/api/appointment/disease/${selectedDisease}`
       );
-      const diseaseHotspots = data.map((diseaseSpot) => ({
+
+      // Filter out entries with null coordinates
+      const validData = data.filter(
+        (diseaseSpot) =>
+          diseaseSpot.coordinates &&
+          diseaseSpot.coordinates.latitude !== null &&
+          diseaseSpot.coordinates.longitude !== null
+      );
+
+      const diseaseHotspots = validData.map((diseaseSpot) => ({
         latitude: diseaseSpot.coordinates.latitude,
         longitude: diseaseSpot.coordinates.longitude,
       }));
+
       setDiseaseHotspots(diseaseHotspots);
     } catch (error) {
       console.error(error);
