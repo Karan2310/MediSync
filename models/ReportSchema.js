@@ -15,12 +15,13 @@ const ReportSchema = new Schema(
         /^[a-zA-Z]+$/,
         (props) => `${props.value} is not a valid report type`,
       ],
-      lowercase: true,
+      default: "patient",
       required: [true, "Please provide the report type"],
     },
     disease: {
       type: Array,
       trim: true,
+      default: [],
       required: [true, "Please provide the disease"],
     },
     report_id: {
