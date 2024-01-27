@@ -16,6 +16,7 @@ const StateProvider = ({ children }) => {
   }, [cookies]);
 
   const getHospital = async (id) => {
+    setLoading(true);
     try {
       const { data } = await axios.get(`/api/dashboard/hospital/${id}`);
       setHopitalData(data);
@@ -23,6 +24,7 @@ const StateProvider = ({ children }) => {
       console.log(err);
       alert(err.response.data.error || err.message);
     }
+    setLoading(false);
   };
 
   return (

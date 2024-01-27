@@ -6,13 +6,19 @@ import requests
 import os
 
 # URLs of known faces
-result = [
-    "https://storage.googleapis.com/medisync-e2ef1.appspot.com/Dr.%20Faizan%20Potrick.jpeg?GoogleAccessId=firebase-adminsdk-29jp5%40medisync-e2ef1.iam.gserviceaccount.com&Expires=16446997800&Signature=mUBNNg29BEBED6ezc%2FJ7l3Gb2U%2BiE3ftENpEuJzvXoyCT%2FM09k6bNmZtrkDoyfazb1gSjE3XOuTdVvhBJJba6QzCSrJwVtuCRJGpCvEXulavB%2BqogWAX7aAnwEvj3Pk9BXUjUqp0OTLL1hc2ykSZz%2FDxTLsFgxNxxSqKwqZkCzYzz%2BIwF%2FScUuarQnzh2d07uP5ajFTOvbzbeNXNQxn5EX5S0CX%2BFsBLsWvUSc%2BvWwDfwX0caro%2FUGu6dHNfmRrZ8NcLW8WPMGFy%2BiDgXow2nkVV2XduArT4SUMetsgU8S2Pjh9xuDiFiFo42E9WW4L%2F%2BSokZdAWXBT5%2FSp%2BVpZDIw%3D%3D",
-    "https://storage.googleapis.com/medisync-e2ef1.appspot.com/Dr.%20Karandeep%20Singh%20Sandhu.jpeg?GoogleAccessId=firebase-adminsdk-29jp5%40medisync-e2ef1.iam.gserviceaccount.com&Expires=16446997800&Signature=eLG9rbfq50WqRuCeIIDPedkjt6kkmsXXslfP1B%2BFFoSx0U6RDwgEdv8stPf71DhnZxLflNE80VUs1Fh2WNHdoX%2F9q9pgaBzVanBGnPt6q6fhtSRTtNqv7TMrs11kHWObSgqJHUOAhVqXjqmmtzT%2FZMbrh3UpLQIUqgYWy8KJW8O7vXpcUqJyCWilZWsgMT933ySg1BioxpkfgZwVv1meBzYdeolQwieCGkG0r%2F%2FsUmWUkGaIAA0lELDOwE%2FW3gGoAG9H3wWNIJvirnVdW7i7JjEII%2BvzhNhr%2B0b8D%2FKJI2hcnb94HOjf6e6yYpBt4%2BdqQG3GgRHHzWb%2BpqPLA1btlw%3D%3D"
-]
+result = []
+
+photos_url = "http://192.168.250.81:8000/api/photos"
+
+response = requests.get(photos_url)
+if response.status_code == 200:
+    result = response.json()
+    print(result)
+else:
+    print("Server is down")
 
 # Video capture from webcam
-cap1 = cv2.VideoCapture(1)
+cap1 = cv2.VideoCapture(0)
 sfr1 = SimpleFacerec()
 
 # Face recognition threshold
@@ -53,7 +59,7 @@ while True:
                 doctor_detected = True
 
             # Extract name and URL
-            name = os.path.splitext(detected_name)[0]
+            name = detected_name
             name = name.replace("%20", " ")
             url = detected_url
 
@@ -65,20 +71,20 @@ while True:
     # Check if a doctor is detected and response time has elapsed
     if doctor_detected and (datetime.now() - last_response_time).total_seconds() >= 20:
         current_time = datetime.now().strftime("%H:%M:%S")
-        log_message = f"{name} found in Cam1 - Time {current_time}"
+        log_message = f"{name.split("-")[-1]} found in Cam1 - Time {current_time}"
         print(log_message)
 
         # Uncomment the following lines to enable requests
-        # response = requests.post(
-        #     "http://192.168.250.56:8000/api/log/cctv/register", data={
-        #         "photo_url": url,
-        #         "status": "CAM1",
-        #     })
-        # print(response.status_code)
-        # if response.status_code == 200:
-        #     print(response.text)
-        # else:
-        #     print("Server is down")
+        response = requests.post(
+            "http://192.168.250.81:8000/api/log/cctv/register", data={
+                "photo_id": name.split("-")[0],
+                "status": "CAM1",
+            })
+        print(response.status_code)
+        if response.status_code == 200:
+            print(response.text)
+        else:
+            print("Server is down")
 
         last_response_time = datetime.now()
 

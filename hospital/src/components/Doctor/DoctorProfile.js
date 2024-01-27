@@ -4,6 +4,8 @@ import { Modal, Button } from "@mantine/core";
 import AttendanceCalendar from "../AttendanceCalendar/AttendanceCalendar";
 import { NavLink, useParams } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setLoading } from "../../slice/AppSclice";
 
 const Table = ({ data, columns }) => {
   const formatDate = (date) => {
@@ -52,18 +54,21 @@ const Table = ({ data, columns }) => {
 const DoctorProfile = () => {
   const { doctor_id } = useParams();
   const [opened, { open, close }] = useDisclosure(false);
-
+  const dispatch = useDispatch();
   const [doctorDetails, setDoctorDetails] = useState({});
 
   useEffect(() => {
     (async () => {
+      dispatch(setLoading(true));
       try {
         const { data } = await axios.get(`/api/dashboard/doctor/${doctor_id}`);
         console.log(data);
         setDoctorDetails(data);
       } catch (error) {
-        console.error("Failed to fetch data: ", error);
+        console.log("Failed to fetch data: ", error);
+        alert(error.response.data.error || error.message);
       }
+      dispatch(setLoading(false));
     })();
   }, []);
 

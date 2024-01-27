@@ -11,11 +11,14 @@ import Patients from "./Patients.js";
 import Register from "./Register.js";
 import { StateContext } from "../context/StateContext.js";
 import { useCookies } from "react-cookie";
+import { setLoading } from "../slice/AppSclice";
+const { useDispatch } = require("react-redux");
 
 const MainLayout = () => {
+  const dispatch = useDispatch();
+
   const [cookies] = useCookies();
-  const { isLogin, setDoctorsList, setLoading, getHospital } =
-    useContext(StateContext);
+  const { isLogin, setDoctorsList, getHospital } = useContext(StateContext);
   const Navigate = useNavigate();
 
   useEffect(() => {
@@ -31,7 +34,7 @@ const MainLayout = () => {
 
   useEffect(() => {
     (async () => {
-      setLoading(true);
+      dispatch(setLoading(true));
       try {
         const { data } = await axios.get(`/api/doctor/hospital/${cookies._id}`);
         setDoctorsList(data);
@@ -39,7 +42,7 @@ const MainLayout = () => {
         console.log(err);
         alert(err.response.data.error || err.message);
       }
-      setLoading(false);
+      dispatch(setLoading(false));
     })();
   }, []);
 

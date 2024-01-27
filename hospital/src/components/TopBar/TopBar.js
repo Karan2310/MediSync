@@ -1,6 +1,11 @@
 import React from "react";
 import "./TopBar.css";
+import { useContext } from "react";
+import { StateContext } from "../../context/StateContext.js";
+
 const TopBar = ({ ToggleMenu }) => {
+  const { hospitalData } = useContext(StateContext);
+
   return (
     <>
       <div className="topbar container-fluid mb-3 p-2 px-md-3">
@@ -14,7 +19,9 @@ const TopBar = ({ ToggleMenu }) => {
                 cursor: "pointer",
               }}
             ></i>
-            <p className="fw-bold title">Hospital</p>
+            <p className="fw-bold title">
+              {hospitalData && hospitalData.name}Hospital
+            </p>
           </div>
           <div
             className="col-3 col-md-2"
