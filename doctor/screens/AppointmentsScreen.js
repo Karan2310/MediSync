@@ -153,7 +153,7 @@ const AppointmentsScreen = () => {
           <Text style={{ fontSize: 16, fontWeight: "600", marginVertical: 5 }}>
             Date: {formatDate(selectedPatient?.date)}
           </Text>
-          {selectedPatient.type === "online" ? (
+          {selectedPatient?.type === "online" ? (
             <Text
               style={{ fontSize: 16, fontWeight: "600", marginVertical: 5 }}
             >
@@ -379,7 +379,7 @@ const AppointmentsScreen = () => {
                           Age : {patient.patient.age}
                         </Text>
 
-                        {patient.type === "online" ? (
+                        {patient?.type === "online" ? (
                           <Text style={{ ...styles.silent, marginTop: 5 }}>
                             Time : {patient.alloted_time || "Not Alloted"}
                           </Text>
