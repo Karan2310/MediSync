@@ -14,6 +14,16 @@ const SideNavigation = () => {
       path: "/register",
       icon: "fa-solid fa-hospital-user",
     },
+    {
+      name: "Map View",
+      path: "/map",
+      icon: "fa-solid fa-map-location-dot",
+    },
+    {
+      name: "Statistics",
+      path: "/stats",
+      icon: "fa-solid fa-chart-simple",
+    },
   ];
 
   return (

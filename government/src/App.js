@@ -7,6 +7,8 @@ import TopBar from "./components/TopBar/TopBar.js";
 import MobileNav from "./components/MobileNav/MobileNav.js";
 import Register from "./components/Register/Register.js";
 import HospitalList from "./components/HospitalList/HospitalList.js";
+import Map from "./components/MapView/Map.js";
+import Statistics from "./components/Statictics/Statistics.js";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -68,6 +70,14 @@ function App() {
                       <Route
                         path="/register"
                         element={<Register setLoading={setLoading} />}
+                      />
+                      <Route
+                        path="/map"
+                        element={<Map setLoading={setLoading} />}
+                      />
+                      <Route
+                        path="/stats"
+                        element={<Statistics setLoading={setLoading} />}
                       />
                     </Routes>
                   </div>
