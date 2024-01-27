@@ -8,6 +8,7 @@ import {
   AppointmentInfo,
   DoctorAvailableSlots,
   MarkAsDone,
+  DiseaseAppointment,
 } from "../controller/Appointment.js";
 import fieldHandler from "../middleware/fieldHandler.js";
 
@@ -85,6 +86,13 @@ router.put(
     .withMessage("Appointment ID is required"),
   fieldHandler,
   MarkAsDone
+);
+
+router.get(
+  "/appointment/disease/:disease",
+  param("disease").trim().notEmpty().withMessage("Disease is required"),
+  fieldHandler,
+  DiseaseAppointment
 );
 
 export default router;
