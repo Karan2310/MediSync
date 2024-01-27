@@ -223,6 +223,63 @@ const AllocateTodayDoctorSlot = async () => {
   }
 };
 
+const SuggestDoctor = async (req, res, next) => {
+  try {
+    const { symptoms } = req.body;
+    const { data } = await axios.post(
+      `${FLASK_URL}/api/max_no_of_specialization`,
+      {
+        symptoms,
+      }
+    );
+    const specialization = data;
+    const doctors = await DoctorSchema.aggregate([
+      {
+        $match: {
+          specialization,
+        },
+      },
+      {
+        $lookup: {
+          from: "hospitals",
+          localField: "hospital_id",
+          foreignField: "_id",
+          as: "hospital",
+        },
+      },
+      {
+        $unwind: "$hospital",
+      },
+      {
+        $lookup: {
+          from: "appointments",
+          localField: "_id",
+          foreignField: "doctor_id",
+          as: "appointments",
+        },
+      },
+    ])
+      .project({
+        _id: 1,
+        name: 1,
+        specialization: 1,
+        hospital_id: 1,
+        "hospital.name": 1,
+        rating: {
+          $avg: "$appointments.rating",
+        },
+      })
+      .sort({
+        rating: -1,
+      })
+      .limit(5);
+    res.status(200).json(doctors);
+  } catch (err) {
+    console.error(err);
+    res.status(400).send(err.message);
+  }
+};
+
 export {
   Register,
   DeleteDoctor,
@@ -234,4 +291,5 @@ export {
   SpecializedHospitals,
   AllocateDoctorSlot,
   AllocateTodayDoctorSlot,
+  SuggestDoctor,
 };

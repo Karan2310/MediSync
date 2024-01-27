@@ -9,6 +9,7 @@ import {
   HospitalSpecialization,
   HospitalSpecializedDoctors,
   SpecializedHospitals,
+  SuggestDoctor,
 } from "../controller/Doctor.js";
 import { DoctorLogin } from "../controller/Login.js";
 import fieldHandler from "../middleware/fieldHandler.js";
@@ -104,5 +105,7 @@ router.get(
   fieldHandler,
   SpecializedHospitals
 );
+
+router.post("/suggest/doctors", SuggestDoctor);
 
 export default router;

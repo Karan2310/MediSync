@@ -71,4 +71,25 @@ function highSeverity(symptoms, threshold = 4) {
   return highWeightCount;
 }
 
+function findSpecialization(symptoms) {
+  const spec = [];
+
+  for (const symptom of symptoms) {
+    try {
+      const value = SpecializationData.find(
+        (record) => record.Symptom === symptom
+      )?.Specialization;
+      spec.push(value);
+    } catch (error) {
+      return `Specialization for '${symptom}' not found`;
+    }
+  }
+
+  if (!spec.length) {
+    return "No valid symptoms provided";
+  }
+
+  return spec;
+}
+
 export { severity, highSeverity };
