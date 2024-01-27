@@ -188,6 +188,7 @@ const AppointmentsScreen = () => {
             }}
             onValueChange={(value) => setDisease(value)}
             items={[
+              { label: "General", value: "general" },
               { label: "Influenza (Flu)", value: "flu" },
               { label: "Common Cold", value: "Common Cold" },
               { label: "COVID-19", value: "COVID-19" },
@@ -348,6 +349,17 @@ const AppointmentsScreen = () => {
                       >
                         {patient.patient.name}
                       </Text>
+                      <Text
+                        style={{
+                          ...styles.silent,
+                          color: "#18C37D",
+                          position: "absolute",
+                          right: 0,
+                        }}
+                      >
+                        {`(${patient.severity_index})`}
+                      </Text>
+
                       <View style={{ marginTop: 10 }}>
                         <Text style={styles.silent}>
                           Age : {patient.patient.age}
@@ -414,7 +426,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 15,
     marginHorizontal: 15,
-    borderRadius: 15,
+    borderRadius: 18,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -422,6 +434,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     display: "flex",
     flexDirection: "row",
+    position: "relative",
   },
   avatar: {
     width: 55,

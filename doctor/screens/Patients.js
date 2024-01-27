@@ -53,7 +53,7 @@ const Patients = () => {
           ellipsizeMode="tail"
           style={{ ...styles.labelText, fontSize: 16, width: "100%" }}
         >
-          {item.name}
+          Name: {item.name}
         </Text>
         <Text style={{ ...styles.labelText, marginTop: 10 }}>
           Age: {item.age}
