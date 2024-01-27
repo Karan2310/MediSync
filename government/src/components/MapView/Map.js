@@ -9,7 +9,7 @@ import Point from "ol/geom/Point";
 import { fromLonLat } from "ol/proj";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
-import { Style, Icon } from "ol/style";
+import { Style, Icon, Circle, Fill, Stroke } from "ol/style";
 import axios from "axios";
 import { Select } from "@mantine/core";
 import pin from "./pin.png";
@@ -17,12 +17,24 @@ import pin from "./pin.png";
 const MapComponent = () => {
   const [map, setMap] = useState(null);
   const [hospitalVectorLayer, setHospitalVectorLayer] = useState(null);
+  const [diseaseVectorLayer, setDiseaseVectorLayer] = useState(null);
   const [hospitals, setHospitals] = useState([]);
   const [disease, setDisease] = useState("");
+  const [diseaseHotspots, setDiseaseHotspots] = useState([
+    { latitude: 22.7239516, longitude: 75.7814486 },
+    { latitude: 22.792516, longitude: 75.7814486 },
+  ]);
 
   const DEFAULT_COORDINATES = [72.868506, 19.0460631];
 
   const createHospitalHotspot = (coordinates) => {
+    const center = fromLonLat(coordinates);
+    return new Feature({
+      geometry: new Point(center),
+    });
+  };
+
+  const createDiseaseHotspot = (coordinates) => {
     const center = fromLonLat(coordinates);
     return new Feature({
       geometry: new Point(center),
@@ -63,16 +75,26 @@ const MapComponent = () => {
         }),
       });
 
-      newMap.addLayer(hospitalVectorLayer);
-      setHospitalVectorLayer(hospitalVectorLayer);
+      const diseaseVectorLayer = new VectorLayer({
+        source: new VectorSource(),
+        style: new Style({
+          image: new Circle({
+            radius: 30,
+            fill: new Fill({ color: "rgba(255, 0, 0, 0.1)" }),
+          }),
+        }),
+      });
 
-      // Get user's current location using Geolocation API
+      newMap.addLayer(hospitalVectorLayer);
+      newMap.addLayer(diseaseVectorLayer);
+
+      setHospitalVectorLayer(hospitalVectorLayer);
+      setDiseaseVectorLayer(diseaseVectorLayer);
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setMapView([longitude, latitude], 15); // Zoom level set to 15 (adjust as needed)
-          newMap.getView().setCenter(fromLonLat([longitude, latitude]));
-          newMap.getView().setZoom(15); // Adjust the initial zoom level as needed
+          setMapView([longitude, latitude], 15);
         },
         (error) => {
           console.error("Error getting current location:", error);
@@ -107,16 +129,31 @@ const MapComponent = () => {
     }
   }, [hospitals, hospitalVectorLayer, map]);
 
+  useEffect(() => {
+    if (diseaseVectorLayer) {
+      diseaseVectorLayer.getSource().clear();
+
+      if (diseaseHotspots.length > 0) {
+        const diseaseHotspotFeatures = diseaseHotspots.map((diseaseSpot) => {
+          const coords = [diseaseSpot.longitude, diseaseSpot.latitude];
+          return createDiseaseHotspot(coords);
+        });
+
+        diseaseVectorLayer.getSource().addFeatures(diseaseHotspotFeatures);
+      }
+    }
+  }, [diseaseHotspots, diseaseVectorLayer]);
+
   const handleDiseaseCoordinates = async (selectedDisease) => {
     try {
       const { data } = await axios.get(
         `/api/appointment/disease/${selectedDisease}`
       );
-      const hospitalCoords = data.map((hospital) => ({
-        latitude: hospital.coordinates.latitude,
-        longitude: hospital.coordinates.longitude,
+      const diseaseHotspots = data.map((diseaseSpot) => ({
+        latitude: diseaseSpot.coordinates.latitude,
+        longitude: diseaseSpot.coordinates.longitude,
       }));
-      setHospitals(hospitalCoords);
+      setDiseaseHotspots(diseaseHotspots);
     } catch (error) {
       console.error(error);
     }
@@ -129,7 +166,6 @@ const MapComponent = () => {
         latitude: hospital.coordinates.latitude,
         longitude: hospital.coordinates.longitude,
       }));
-      console.log(hospitalCoords);
       setHospitals(hospitalCoords);
     } catch (error) {
       console.error(error);
