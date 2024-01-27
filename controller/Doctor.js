@@ -8,6 +8,7 @@ import {
   AllocateAppointmentSlot,
   AllocateTodayAppointmentSlot,
 } from "./Appointment.js";
+import { max_no_of_specialization } from "../utils/Severity.js";
 
 const { randomUUID } = new ShortUniqueId({ length: 8 });
 
@@ -226,13 +227,7 @@ const AllocateTodayDoctorSlot = async () => {
 const SuggestDoctor = async (req, res, next) => {
   try {
     const { symptoms } = req.body;
-    const { data } = await axios.post(
-      `${FLASK_URL}/api/max_no_of_specialization`,
-      {
-        symptoms,
-      }
-    );
-    const specialization = data;
+    const specialization = max_no_of_specialization(symptoms);
     const doctors = await DoctorSchema.aggregate([
       {
         $match: {

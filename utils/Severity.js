@@ -75,21 +75,26 @@ function findSpecialization(symptoms) {
   const spec = [];
 
   for (const symptom of symptoms) {
-    try {
-      const value = SpecializationData.find(
-        (record) => record.Symptom === symptom
-      )?.Specialization;
-      spec.push(value);
-    } catch (error) {
-      return `Specialization for '${symptom}' not found`;
-    }
+    const value = SpecializationData.find(
+      (record) => record.Symptom === symptom
+    )?.Specialization;
+    spec.push(value);
   }
-
-  if (!spec.length) {
-    return "No valid symptoms provided";
-  }
-
   return spec;
 }
 
-export { severity, highSeverity };
+function max_no_of_specialization(symptoms) {
+  const specializationCounter = findSpecialization(symptoms).reduce(
+    (counter, specialization) => {
+      counter[specialization] = (counter[specialization] || 0) + 1;
+      return counter;
+    },
+    {}
+  );
+  const mostCommonSpecialization = Object.keys(specializationCounter).reduce(
+    (a, b) => (specializationCounter[a] > specializationCounter[b] ? a : b)
+  );
+  return mostCommonSpecialization;
+}
+
+export { severity, highSeverity, max_no_of_specialization };
