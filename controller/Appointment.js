@@ -5,6 +5,7 @@ import PatientSchema from "../models/PatientSchema.js";
 import AlertSchema from "../models/AlertSchema.js";
 import { addMinutes } from "../utils/Function.js";
 import ErrorResponse from "../utils/errorResponse.js";
+import { severity, highSeverity } from "../utils/Severity.js";
 import mongoose from "mongoose";
 const { ObjectId } = mongoose.Types;
 
@@ -25,30 +26,28 @@ const OnlineRegister = async (req, res, next) => {
       .select("disease")
       .lean();
     const disease_list = reports.flatMap((report) => report.disease);
-    const { data } = await axios.post(
-      `${FLASK_URL}/api/patient/severity_index`,
-      {
-        age: patient.age,
-        symptoms,
-        past_disease: disease_list,
-        lifestyle: patient.lifestyle,
-        habits: patient.habits,
-      }
+    const severity_index = severity(
+      patient.age,
+      symptoms,
+      disease_list,
+      patient.lifestyle,
+      patient.habits
     );
+    const severity_count = highSeverity(symptoms);
     const appointment = await AppointmentSchema.create({
       hospital_id,
       doctor_id,
       patient_id,
       type: "online",
       symptoms,
-      severity_index: data.severity_index,
-      severity_count: data.severity_count,
+      severity_index,
+      severity_count,
       date: date,
       time_slot,
       coordinates,
       auto_booked,
     });
-    if (data.severity_index < 1.0) {
+    if (severity_index < 1.0) {
       await AlertSchema.create({
         doctor_id,
         patient_id,
@@ -95,16 +94,14 @@ const WalkInRegister = async (req, res, next) => {
       .select("disease")
       .lean();
     const disease_list = reports.flatMap((report) => report.disease);
-    const { data } = await axios.post(
-      `${FLASK_URL}/api/patient/severity_index`,
-      {
-        age: patient.age,
-        symptoms,
-        past_disease: disease_list,
-        lifestyle: patient.lifestyle,
-        habits: patient.habits,
-      }
+    const severity_index = severity(
+      patient.age,
+      symptoms,
+      disease_list,
+      patient.lifestyle,
+      patient.habits
     );
+    const severity_count = highSeverity(symptoms);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const today_online_appointment = await AppointmentSchema.aggregate([
@@ -145,8 +142,8 @@ const WalkInRegister = async (req, res, next) => {
       patient_id: patient._id,
       type: "walk_in",
       symptoms,
-      severity_index: data.severity_index,
-      severity_count: data.severity_count,
+      severity_index,
+      severity_count,
       date: date,
       time_slot,
       coordinates,
