@@ -10,13 +10,10 @@ const LogSchema = new Schema(
     type: {
       type: String,
       enum: ["CCTV Camera", "Wifi Network", "RFID"],
-      match: [/^[a-zA-Z]+$/, (props) => `${props.value} is not a valid type`],
-      lowercase: true,
       required: [true, "Please provide a type"],
     },
     status: {
       type: String,
-      match: [/^[a-zA-Z]+$/, (props) => `${props.value} is not a valid status`],
       required: [true, "Please provide a status"],
     },
   },

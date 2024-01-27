@@ -16,10 +16,6 @@ const DoctorSchema = new Schema(
     name: {
       type: String,
       trim: true,
-      match: [
-        /^[a-zA-Z0-9 ]+$/,
-        (props) => `${props.value} is not a valid doctor name`,
-      ],
       required: [true, "Please add the doctor name"],
     },
     mac_address: {
