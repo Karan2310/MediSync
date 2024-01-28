@@ -17,12 +17,23 @@ import { useSelector } from "react-redux";
 import { Badge } from "@mantine/core";
 
 const AppointmentCard = ({ value, index }) => {
+  const sorted_today_online_appointment = [
+    ...value?.today_non_treated_appointment,
+  ]?.sort((a, b) => {
+    if (a.severity_index !== b.severity_index) {
+      return b.severity_index - a.severity_index;
+    } else {
+      return b.severity_count - a.severity_count;
+    }
+  });
+
   var index =
-    value.today_appointment && value.today_appointment.length > 0
-      ? value.today_appointment.findIndex(
+    sorted_today_online_appointment &&
+    sorted_today_online_appointment.length > 0
+      ? sorted_today_online_appointment.findIndex(
           (appointment) => appointment._id === value._id
         )
-      : "First";
+      : -1;
 
   const handleCancel = (id) => {
     try {
@@ -50,7 +61,7 @@ const AppointmentCard = ({ value, index }) => {
               ? "Next"
               : index === -1
               ? "Done"
-              : `${index ? index : ""} in Queue`
+              : `${index + 1} in Queue` // Adjusted to start counting from 1
             : "Walkin"}
         </Badge>
 
